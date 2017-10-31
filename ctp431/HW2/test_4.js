@@ -6,10 +6,12 @@ var spectrum;
 
 var smoothing = 0.8;
 var NUM_SPEC_BINS = 1024;
+var NUM_BALLS = 800;
 
 var particles = [];
 var balls = [];
 var curr_points = [];
+var all_points = [];
 
 
 var lyrics_string;
@@ -54,8 +56,16 @@ function setup(){
 	amplitude = new p5.Amplitude();
 	amplitude.setInput(soundFile);
 
-	for (i=0; i<NUM_SPEC_BINS; i++){
+	for (var i=0; i<NUM_SPEC_BINS; i++){
 		particles.push(new Particle(createVector(random(windowWidth), random(windowHeight)), lyrics_char_jpn[i%(lyrics_char.length)])); 
+	}
+
+	for (var i=0; i<NUM_BALLS; i++){
+		var pt = createVector(windowWidth, int(random(windowHeight)));
+		all_points.push(pt);
+		// var ball = new Ball(windowWidth + 800, int(random(windowHeight)));
+		var ball = new Ball(pt.x, pt.y);
+		balls.push(ball);
 	}
 
 	level = amplitude.getLevel();
@@ -63,11 +73,16 @@ function setup(){
 	push();
 	textSize(250 + map(level, 0, 1, 0, 200));
 	curr_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
-	for (var i = 0; i<curr_points.length; i += 2){
-		var pt = curr_points[i];
-		var ball = new Ball(pt.x, pt.y);
-		balls.push(ball);
 
+	var b_idx = 0;
+	for (var i = 0; i<curr_points.length; i += 2){
+		all_points[b_idx] = curr_points[i];
+		
+		var pt = curr_points[i];
+		console.log(pt);
+		balls[i].target = createVector(pt.x, pt.y);
+		// var ball = new Ball(pt.x, pt.y);
+		// balls.push(ball);
 	}
 	pop();
 
@@ -99,7 +114,7 @@ function draw() {
 		balls[i].position.x += (random(3));
 		balls[i].update();
 		balls[i].behaviors();
-		balls[i].show(spectrum[i]);
+		balls[i].show(spectrum[i], level);
 	}
 
 	if (still_moving == false){
@@ -109,30 +124,32 @@ function draw() {
 			movement_begin = frameCount;
 			subject_text = [];
 			var starting_idx = int(random(lyrics_char.length - 6));
-			for (var i=0; i<6; i++){
+			for (var i=0; i<5; i++){
 				subject_text.push(lyrics_char[starting_idx + i]);
 			}
 			console.log(subject_text);
+			
 			push();
-			textSize(100 + map(level, 0, 1, 0, 200));
+			textSize(100 + map(level, 0, 1, 50, 300));
 			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
 
-			for (var i = 0; i<changed_points.length; i++){
-				if (i < curr_points.length){
-					curr_points[i] = changed_points[i];
-				}
+			var p_idx = 0;
+			for (var i=0; i < changed_points.length; i += 2){
+				all_points[p_idx] = changed_points[i];
+				p_idx++;
 			}
-
+			for (var i=p_idx; i < all_points.length; i++){
+				all_points[i] = createVector(windowWidth, int(random(windowHeight)));
+			}
 			
-			var b_idx = 0;
+			// var b_idx = 0;
 			console.log(balls.length);
-
-			for (var i = 0; i<(curr_points.length); i += 2){
-				var pt = curr_points[i];
-				balls[b_idx].target = createVector(pt.x, pt.y);
+			for (var i = 0; i<(all_points.length); i++){
+				var pt = all_points[i];
+				balls[i].target = createVector(pt.x, pt.y);
 				// console.log(b_idx);
 				// console.log(balls[b_idx].target);
-				b_idx++;
+				// b_idx++;
 			}
 			pop();
 		}
@@ -166,10 +183,10 @@ function Ball(x, y) {
 	this.target = createVector(x, y);
 	this.velo = createVector();
 	// this.acc = createVector();
-	this.acc = p5.Vector.random2D().mult(0.6);
+	this.acc = p5.Vector.random2D().mult(6.0);
 	this.r = 10;
-	this.maxspeed = 14;
-	this.maxforce = 0.6;
+	this.maxspeed = 24;
+	this.maxforce = 1.4;
 
 }
 
@@ -181,9 +198,10 @@ Ball.prototype.update = function(){
 	this.acc.mult(0);
 }
 
-Ball.prototype.show = function(mag){
-	stroke(0, 255, 0, 120);
-	strokeWeight(this.r * map(mag, 0, 255, 0.2, 5));
+Ball.prototype.show = function(mag, level){
+	stroke(0, 255, 0, 90);
+	strokeWeight(Math.pow((this.r * map(mag, 0, 255, 0.4, 3)), map(level, 0, 1, 1, 1.5)));
+	// strokeWeight(Math.pow((this.r * map(mag, 0, 255, 0.3, 1)), map(level, 0, 1, 1, 1)));
 	point(this.position.x, this.position.y);
 
 }
