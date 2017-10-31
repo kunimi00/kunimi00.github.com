@@ -31,8 +31,9 @@ function preload(){
 	lyrics_string = loadStrings('lyrics_kor.txt');
 	lyrics_string_jpn = loadStrings('lyrics_jpn.txt');
 	
-	font = loadFont('NanumGothic.ttf');
-	font_jap = loadFont('GenJyuuGothic-Heavy.ttf') 
+	font_kor = loadFont('NanumGothic.ttf');
+	font_jpn = loadFont('GenJyuuGothic-Heavy.ttf');
+	font_light = loadFont('GenJyuuGothic-ExtraLight.ttf');
 }
 
 function setup(){
@@ -61,7 +62,7 @@ function setup(){
 
 	push();
 	textSize(250 + map(level, 0, 1, 0, 200));
-	curr_points = font.textToPoints(subject_text, 0, windowHeight/2);
+	curr_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
 	for (var i = 0; i<curr_points.length; i += 2){
 		var pt = curr_points[i];
 		var ball = new Ball(pt.x, pt.y);
@@ -78,6 +79,21 @@ function draw() {
 	level = amplitude.getLevel();
 
 	background(255);	
+
+	push();
+	noStroke();
+	textFont(font_light);
+	fill(0);
+	textSize(22);
+	textStyle(BOLD);
+	textAlign(RIGHT, BASELINE);
+	text("melomance", windowWidth - 50, windowHeight - 80);
+	textSize(14);
+	textStyle(NORMAL);
+  	text("jung choi, fall 2017", windowWidth - 50, windowHeight - 60);
+  	text("song visulization", windowWidth - 50, windowHeight - 43);
+	pop();
+
 	for (var i = 0; i < balls.length; i++){
 		balls[i].position.y += (random(3));
 		balls[i].position.x += (random(3));
@@ -99,7 +115,7 @@ function draw() {
 			console.log(subject_text);
 			push();
 			textSize(100 + map(level, 0, 1, 0, 200));
-			var changed_points = font.textToPoints(subject_text, 0, windowHeight/2);
+			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
 
 			for (var i = 0; i<changed_points.length; i++){
 				if (i < curr_points.length){
@@ -257,7 +273,7 @@ Particle.prototype.show = function(mag){
 	push();
 	fill(255 - mag);
   	textSize(mag);
-  	textFont(font_jap);
+  	textFont(font_jpn);
   	// console.log(this.character);
   	strokeWeight(0);
 	text(this.character, this.position.x, this.position.y);
