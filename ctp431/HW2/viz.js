@@ -72,17 +72,19 @@ function setup(){
 
 	push();
 	textSize(250 + map(level, 0, 1, 0, 200));
-	curr_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
+	curr_points = font_kor.textToPoints(subject_text, 0, windowHeight/2 + 30);
 
 	var b_idx = 0;
 	for (var i = 0; i<curr_points.length; i += 2){
 		all_points[b_idx] = curr_points[i];
-		
-		var pt = curr_points[i];
-		console.log(pt);
-		balls[i].target = createVector(pt.x, pt.y);
 		// var ball = new Ball(pt.x, pt.y);
 		// balls.push(ball);
+		b_idx++;
+	}
+	for (var i = 0; i<all_points.length; i++){
+		var pt = all_points[i];
+		// console.log(pt);
+		balls[i].target = createVector(pt.x, pt.y);
 	}
 	pop();
 
@@ -131,7 +133,7 @@ function draw() {
 			
 			push();
 			textSize(100 + map(level, 0, 1, 50, 300));
-			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2);
+			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2 + random(100));
 
 			var p_idx = 0;
 			for (var i=0; i < changed_points.length; i += 2){
@@ -142,14 +144,10 @@ function draw() {
 				all_points[i] = createVector(windowWidth, int(random(windowHeight)));
 			}
 			
-			// var b_idx = 0;
 			console.log(balls.length);
 			for (var i = 0; i<(all_points.length); i++){
 				var pt = all_points[i];
 				balls[i].target = createVector(pt.x, pt.y);
-				// console.log(b_idx);
-				// console.log(balls[b_idx].target);
-				// b_idx++;
 			}
 			pop();
 		}
