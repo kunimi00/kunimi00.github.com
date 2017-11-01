@@ -133,7 +133,7 @@ function draw() {
 			
 			push();
 			textSize(100 + map(level, 0, 1, 50, 300));
-			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2 + random(100));
+			var changed_points = font_kor.textToPoints(subject_text, 0, windowHeight/2 - 50 + random(150));
 
 			var p_idx = 0;
 			for (var i=0; i < changed_points.length; i += 2){
