@@ -9,34 +9,34 @@ var synth;
 var synth_params = {
 
 	// LFO params
-	lfoRate:0,
+	lfoRate:8.0,
 	lfoDepth: 5,
 
 	// Low pass filter params
-	filterCutoffFreq:5000,
+	filterCutoffFreq:9000,
 	filterQ:1,
-	filterEnvAttackTime: 0.1,
-	filterEnvDecayTime: 0.2,
-	filterEnvSustainLevel: 1,
+	filterEnvAttackTime: 0.5,
+	filterEnvDecayTime: 0.5,
+	filterEnvSustainLevel: 0.1,
 	filterEnvReleaseTime: 0.1,
 	
 	// ADSR envelope
-	ampEnvAttackTime: 0.1,
-	ampEnvDecayTime: 0.2,
-	ampEnvSustainLevel: 0.9,
-	ampEnvReleaseTime: 0.1
+	ampEnvAttackTime: 0.25,
+	ampEnvDecayTime: 0.25,
+	ampEnvSustainLevel: 0.8,
+	ampEnvReleaseTime: 0.2
 };
 
 // delay params
 var delay_params = {
 	delayTime: 0.3,
-	delayFeedbackGain: 0.2,
-	delayWetDry: 0.1
+	delayFeedbackGain: 0.3,
+	delayWetDry: 0.25
 }
 
 // reverb params
 var reverb_params = {
-	reverbWetDry: 0.5
+	reverbWetDry: 0.8
 };
 
 
