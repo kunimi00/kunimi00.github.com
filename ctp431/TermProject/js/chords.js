@@ -5,7 +5,7 @@ setChords = function (){
 	 *  PIANO
 	 */
 	var piano = new Tone.PolySynth(4, Tone.Synth, {
-		"volume" : -11,
+		"volume" : -13,
 		"oscillator" : {
 			"partials" : [1, 2, 1],
 		},
@@ -20,7 +20,7 @@ setChords = function (){
 
 	var pianoPart = new Tone.Part(function(time, chord){
 		piano.triggerAttackRelease(chord, "8n", time);
-	}, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]).start("8m");
+	}, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]).start(0);
 
 	pianoPart.loop = true;
 	pianoPart.loopEnd = "1m";
@@ -46,10 +46,10 @@ setRap = function (){
 	// }
 
 
-	var curr_time_notation = '12m'
+	var curr_time_notation = "0 +4m"
 	var abs_idx = 0;
 	for(i=0; i < full_lines.length; i++) {
-		curr_time_notation = '12m +' + (4*i).toString() + 'm';
+		curr_time_notation = '0 +4m +' + (4*i).toString() + 'm';
 
 		if (full_lines[i].length <= 8){
 			for (j=0; j<full_lines[i].length; j++){

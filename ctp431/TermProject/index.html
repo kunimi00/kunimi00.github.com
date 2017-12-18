@@ -29,20 +29,23 @@
 		<div id="Title"><b>Lyrics2Rap</b>  CTP431 Fall 2017 Term Project, by Junc Choi  20174466 GSCT KAIST</div>
 
 		<div id="Explanation">
-			<br>
-			1) Put Your lyrics down. <br>
-			2) Automatically generate extrac sentence with rhymes for each word. <br>
+			<i>Instructions</i> <br>
+			1) Put your own lyrics down. <br>
+			&nbsp <i>If you want to generate some sample rap lyrics, please try the following url</i> :
+			<a href="https://www.song-lyrics-generator.org.uk/?i=m90xvmc">https://www.song-lyrics-generator.org.uk/?i=m90xvmc</a><br>
+			2) Automatically generate extra sentences with <b>corresponding rhyme for each word.</b> <br>
 			3) Generate audio for rappping. <br>
-			4) Play the song! <br>
+			4) <b>Play the song!</b> <i>(sometimes it takes a couple of seconds before start playing.) <br>
 		</div>
 
 		<textarea rows="4" cols="50" name="lyrics-text" id="lyrics-text">
-Ayo, all those couples out there, it's time.
+
 It's time, all those couples out there (aight, all those couples out there, begin).
 Straight out the cool dungeons of rap.
 
-The book drops deep as does my teddy bear.
 I never smoke, 'cause to smoke is the girlfriend of everywhere.
+The book drops deep as does my teddy bear.
+
 Beyond the walls of jugs, life is defined.
 I think of darkness when I'm in an Oslo state of mind.
 
@@ -79,25 +82,31 @@ A crazy angel is quite the archangel.
 Thinking of darkness. Yaz, thinking of darkness (darkness).
 		</textarea>
 
-		<button id="prepareRap" onclick="prepareRap()">Prepare Rap</button>
+		<button id="prepareRap" onclick="prepareRap()">(1) Prepare Lyrics</button>
 		<div id="preparedText">
 			<p id="preparedTextContent"><br>Preprocessed text will be displayed.<br><br></p>
 		</div>
 		
-		<button id="generateRhymes" onclick="generateRhymes()">Generate Rhymes</button> 
+		<button id="generateRhymes" onclick="generateRhymes()">(2) Write Down Extra Rhymes</button> 
 		<div id="rhymeGenerated">
-			<p id="rhymeGeneratedContent"><br>Generated rap will be displayed.<br><br></p>
+			<p id="rhymeGeneratedContent"><br>Generated extra lyrics will be displayed along with the original ones.<br><br></p>
 		</div>
 
 
-		<button id="createRap" onclick="createRap()">Create Rap</button>
+		<button id="createRap" onclick="createRap()">(3) Generate Rap</button>
 		<div id="rapProgress">
 	  		<div id="rapProgressBar"></div>
 		</div>
 
 		<div style='height: 40px;'>
 		</div>
-		<button id="playSong" onclick="playSong()">Play Song</button> 
+		<button id="setupSong" onclick="setupSong()">(4) Set Up Song</button> 
+
+		<div style='height: 40px;'>
+		</div>
+		<button id="playSong" onclick="playSong()">(5) Play Song</button> 
+		<button id="stopSong" onclick="stopSong()"> Stop Song</button>
+
 		<div style='height: 100px;'>
 		</div>
 			

@@ -14,7 +14,7 @@ setRhythm = function (){
 
 	var kickPart = new Tone.Loop(function(time){
 		kick.triggerAttackRelease("C2", "8n", time);
-	}, "2n").start("8m");
+	}, "2n").start(0);
 	
 
 	/*
@@ -36,7 +36,7 @@ setRhythm = function (){
 
 	var snarePart = new Tone.Loop(function(time){
 		snare.triggerAttack(time);
-	}, "2n").start("8:1");
+	}, "2n").start("0 +4n");
 
 	/*
 	 BASS
@@ -59,7 +59,7 @@ setRhythm = function (){
 
 	var bassPart = new Tone.Sequence(function(time, note){
 		bass.triggerAttackRelease(note, "16n", time);
-	}, ["C2", ["A#2", ["A2", "G#2"]], "G2", ["D2", "G1"]]).start("8m");
+	}, ["C2", ["A#2", ["A2", "G#2"]], "G2", ["D2", "G1"]]).start(0);
 
 	bassPart.probability = 0.9;
 

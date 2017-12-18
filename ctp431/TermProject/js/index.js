@@ -21,10 +21,16 @@ var tmp_txt;
 
 var lexicon = new RiLexicon();
 
+var curr_time;
+
+
+
 document.getElementById("generateRhymes").disabled = true;
 document.getElementById("createRap").disabled = true;
+document.getElementById("setupSong").disabled = true;
 document.getElementById("playSong").disabled = true;
-
+document.getElementById("stopSong").style.display = "none";
+Tone.Transport.stop();
 
 // Rap Creation Part
 
@@ -192,7 +198,7 @@ generateVoiceData = function(){
 
 		(function rec(i) {
 			tmp_txt = measures_text_flattened[i];
-			speechData = meSpeak.speak(tmp_txt,{pitch: 200, rawdata: "ArrayBuffer", wordgap: 50, speed: 160,});
+			speechData = meSpeak.speak(tmp_txt,{pitch: Math.floor(Math.random() * 20 + 60), rawdata: "ArrayBuffer", wordgap: 50, speed: 180,});
 
 			(ctx.decodeAudioData(speechData)).then(function(result) {	
 				var source = ctx.createBufferSource();
@@ -223,7 +229,7 @@ generateVoiceData = function(){
 		// result[0].start();
 		measures_buffer = result;
 		document.getElementById("createRap").disabled = true;
-		document.getElementById("playSong").disabled = false;
+		document.getElementById("setupSong").disabled = false;
 	});
 
 }
@@ -234,13 +240,29 @@ generateVoiceData = function(){
 // Song Generation Part
 // time notation - BARS:QUARTERS:SIXTEENTHS
 
-playSong = function(){
-	document.getElementById("playSong").disabled = true;
+setupSong = function(){
+	document.getElementById("setupSong").disabled = true;
+	document.getElementById("playSong").disabled = false;
+
+	Tone.Transport.bpm.value = 108;
+	// curr_time = ctx.currentTime();
 	setRhythm();
 	setChords();
 	setRap();
-	Tone.Transport.bpm.value = 90;
-	Tone.Transport.start(+2.0);
+	// Tone.Transport.start(+2.0);
+}
+
+playSong = function(){
+	// document.getElementById("playSong").disabled = true;
+	document.getElementById("playSong").style.display = "none";
+	document.getElementById("stopSong").style.display = "block";
+	Tone.Transport.start();
+}
+
+stopSong = function(){
+	document.getElementById("playSong").style.display = "block";
+	document.getElementById("stopSong").style.display = "none";
+	Tone.Transport.stop();
 }
 
 
@@ -248,68 +270,6 @@ playSong = function(){
 
 
 
-// getRhymes = function(){
 
-// 	function rhymesToArray(){
-// 		measures_rhyme_flattend = [];
-// 		rhyme_arr = [];
-		
-// 		var curr_width = 0;
-// 		var def = new $.Deferred();
-
-// 		function _getRhymeArr(word){
-// 			return lexicon.rhymes(word);
-// 		}
-
-// 		(function rec(i) {
-// 			if (measures_text_flattened[i].length > 3){
-// 				(_getRhymeArr(measures_text_flattened[i])).then(function(result) {
-// 					rhyme_arr = result;
-// 					if (rhyme_arr.length > 0){
-// 						random_idx = Math.floor(Math.random() * rhyme_arr.length);
-// 						measures_rhyme_flattend.push(rhyme_arr[0]);
-// 					} else {
-// 						measures_rhyme_flattend.push(measures_text_flattened[i]);
-// 					}
-
-// 					if (i < measures_text_flattened.length - 1 && result !== undefined){
-
-// 						curr_width += Math.ceil(100. / measures_text_flattened.length);
-// 						if (curr_width > 100) {
-// 							curr_width = 100;
-// 						}
-// 						changeWidth(document.getElementById("rapProgressBar"), curr_width);
-// 						rec(++i);
-// 					} else {
-// 						def.resolve(measures_rhyme_flattend);
-// 					}
-// 				});
-// 			} else {
-// 				(measures_rhyme_flattend.push(measures_text_flattened[i])).then(function(result){
-// 					if (i < measures_text_flattened.length - 1) {
-// 						curr_width += Math.ceil(100. / measures_text_flattened.length);
-// 						if (curr_width > 100) {
-// 							curr_width = 100;
-// 						}
-// 						changeWidth(document.getElementById("rapProgressBar"), curr_width);
-// 						rec(++i);
-// 					} else {
-// 						def.resolve(measures_rhyme_flattend);
-// 					}
-// 				});
-// 			}
-// 		})(0);
-
-
-// 		return def.promise();
-// 	}
-
-// 	rhymesToArray().done(function(result){
-// 		console.log(result);
-// 		// result[0].start();
-// 		measures_rhyme_flattend = result;
-// 	});
-
-// }
 
 
