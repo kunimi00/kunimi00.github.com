@@ -150,7 +150,7 @@ getRhymes = function(){
 	for(i=0; i < lines.length; i++){
 		console.log(lines[i]);
 		text_to_show += measures_text[i].join(' ') + '.<br>';
-		text_to_show += '<font color="gray">' + measures_rhyme[i].join(' ') + '.</font><br><br>';
+		text_to_show += '<font color="RoyalBlue">' + measures_rhyme[i].join(' ') + '.</font><br><br>';
 	}
 	document.getElementById("rhymeGeneratedContent").innerHTML = '<br>' + text_to_show;
 	console.log(measures_text_flattened);
