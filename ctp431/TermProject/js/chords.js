@@ -20,7 +20,7 @@ setChords = function (){
 
 	var pianoPart = new Tone.Part(function(time, chord){
 		piano.triggerAttackRelease(chord, "8n", time);
-	}, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]).start(0 +4m);
+	}, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]).start("0 +4m");
 
 	pianoPart.loop = true;
 	pianoPart.loopEnd = "1m";
