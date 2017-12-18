@@ -140,8 +140,8 @@ var instruments = (function() {
 
 
 //		PIANO
-	var piano = new Tone.PolySynth(4, Tone.Synth, {
-		"volume" : -2,
+	var piano = new Tone.PolySynth(5, Tone.Synth, {
+		"volume" : -20,
 		"oscillator" : {
 			"partials" : [1, 2, 5],
 		},
@@ -207,7 +207,8 @@ var instruments = (function() {
 
 
 //      Marimba
-	var marimba = new Tone.Synth({
+	var marimba = new Tone.PolySynth(5, Tone.Synth, {
+		"volume" : -10,
 		"oscillator": {
 			"partials": [
 				1,
@@ -400,3 +401,26 @@ var instruments = (function() {
 		};
 
 })();
+
+function add_reverb(instrument) {
+
+	var effect1;
+
+	// create effects
+	var effect1 = new Tone.Freeverb();
+	effect1JSON = {
+		"roomSize": 0.9,
+		"dampening": 2000,
+	    "wet": 0.5
+	};
+	effect1.set(effect1JSON);
+
+	// make connections
+	instrument.connect(effect1);
+	effect1.connect(Tone.Master);
+
+	return instrument;
+
+}
+
+

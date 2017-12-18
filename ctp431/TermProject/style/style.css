@@ -1,0 +1,149 @@
+
+canvas {
+	margin-top: 10px;
+}
+textarea {
+    width: 100%;
+    height: 300px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1) inset;
+    resize: none;
+    font-size: 1.2em;
+}
+
+button {
+	display: inline-block;
+	border-radius: 5px;
+	border: none;
+	font-size: 1.2rem;
+	padding: 1.0rem 1.0em;
+	background: #69c773;
+	/*border-bottom: 1px solid #498b50;*/	
+	color: white;
+	-webkit-font-smoothing: antialiased;
+	font-weight: bold;
+	margin: 3px;
+	width: 100%;
+	text-align: center;
+}
+
+button:hover, button:focus {
+	opacity: 0.75;
+	cursor: pointer;
+}
+
+button:active {
+	opacity: 1;
+	box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1) inset;
+}
+
+button:disabled {
+   		background: #dddddd;
+}
+
+#Content {
+	width: 800px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:10pt;
+	float:center;
+}
+
+#Title {
+	/*font-size: 1.0em;*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:10pt;
+	font-style: bold;
+	margin: auto;
+    
+    padding: 5px;
+	width:100%;
+	word-wrap: break-word;
+	margin:auto;
+}
+
+#Explanation {
+	/*font-size: 1.0em;*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12pt;
+
+    padding: 10px;
+	width:100%;
+	word-wrap: break-word;
+	margin:auto;
+}
+
+
+
+#prepareProgress {
+    width: 100%;
+    background-color: grey;
+}
+#prepareProgressBar {
+    width: 0%;
+    height: 30px;
+    background-color: green;
+}
+
+#rapProgress {
+    width: 100%;
+    background-color: grey;
+}
+#rapProgressBar {
+    width: 0%;
+    height: 30px;
+    background-color: green;
+}
+
+#rhymeProgress {
+    width: 100%;
+    background-color: grey;
+}
+#rhymeProgressBar {
+    width: 0%;
+    height: 30px;
+    background-color: green;
+}
+
+#preparedText, #rhymeGenerated, #preparedTextContent, #rhymeGeneratedContent {
+	/*font-size: 1.0em;*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12pt;
+	float:left;
+	/*position:absolute;*/
+	/*background-color:#D4D3D0;*/
+	/*height:50px;*/
+	width:100%;
+	word-wrap: break-word;
+	margin:auto;
+}
+
+.blink_text {
+
+    animation:1s blinker linear infinite;
+	    -webkit-animation:1s blinker linear infinite;
+	    -moz-animation:1s blinker linear infinite;
+    	color: gray;
+    }
+
+    @-moz-keyframes blinker {  
+	    0% { opacity: 1.0; }
+	    50% { opacity: 0.0; }
+	    100% { opacity: 1.0; }
+	}
+
+    @-webkit-keyframes blinker {  
+	    0% { opacity: 1.0; }
+	    50% { opacity: 0.0; }
+	    100% { opacity: 1.0; }
+    }
+
+    @keyframes blinker {  
+    	0% { opacity: 1.0; }
+    	50% { opacity: 0.0; }
+    	100% { opacity: 1.0; }
+    }
+}

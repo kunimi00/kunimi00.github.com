@@ -12,673 +12,99 @@
 	<script src="./lib/mespeak.full.js"></script>
 	<script src="./lib/p5.js"></script>
 	<script src="./lib/p5.speech.js"></script>
+	<script src="./lib/jquery-1.11.3.min.js"></script>
 
+	<!-- <script src="./js/instruments.js"></script> -->
+	<script src="./js/utils.js"></script>
+	<script src="./js/rhythm.js"></script>
+	<script src="./js/chords.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="./style/examples.css">
+	<link rel="stylesheet" type="text/css" href="./style/style.css">
 
 
 </head>
 <body>
-	<style type="text/css">
-		canvas {
-			margin-top: 10px;
-		}
-		textarea {
-		    width: 100%;
-		    height: 300px;
-		    padding: 12px 20px;
-		    box-sizing: border-box;
-		    border: 2px solid #ccc;
-		    border-radius: 4px;
-		    background-color: #f8f8f8;
-		    box-shadow: 0 2px 3px rgba(0,0,0,0.1) inset;
-		    resize: none;
-		    font-size: 1.2em;
-		}
 
-		button {
-			display: inline-block;
-			border-radius: 3px;
-			border: none;
-			font-size: 0.9rem;
-			padding: 0.5rem 0.8em;
-			background: #69c773;
-			border-bottom: 1px solid #498b50;
-			color: white;
-			-webkit-font-smoothing: antialiased;
-			font-weight: bold;
-			margin: 0;
-			width: 100%;
-			text-align: center;
-		}
+	<div id="Content" style="margin: auto;">
+		<div id="Title"><b>Lyrics2Rap</b>  CTP431 Fall 2017 Term Project, by Junc Choi  20174466 GSCT KAIST</div>
 
-		button:hover, button:focus {
-			opacity: 0.75;
-			cursor: pointer;
-		}
-
-		button:active {
-			opacity: 1;
-			box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1) inset;
-		}
-
-	</style>
-	<div 	id="Content">
-		<div id="Title">Word2Music CTP431 Term Project</div>
 		<div id="Explanation">
-			Put Your lyrics and it will compose a song for you. 
-			It is the application-wide timekeeper. It's clock source enables sample-accurate scheduling as well as tempo-curves and automation. This example uses Tone.Sequence to invoke a callback every 16th note.
+			<br>
+			1) Put Your lyrics down. <br>
+			2) Automatically generate extrac sentence with rhymes for each word. <br>
+			3) Generate audio for rappping. <br>
+			4) Play the song! <br>
 		</div>
 
-		<textarea rows="4" cols="50" name="lyrics-text" id="lyrics-text">'What's happened to me?' he thought. It wasn't a dream. 
-							His room, a proper human room although a little too small, lay peacefully 
-							between its four familiar walls.</textarea>
+		<textarea rows="4" cols="50" name="lyrics-text" id="lyrics-text">
+Ayo, all those couples out there, it's time.
+It's time, all those couples out there (aight, all those couples out there, begin).
+Straight out the cool dungeons of rap.
 
-	<button onclick="createSong()">Create Song</button>
+The book drops deep as does my teddy bear.
+I never smoke, 'cause to smoke is the girlfriend of everywhere.
+Beyond the walls of jugs, life is defined.
+I think of darkness when I'm in an Oslo state of mind.
 
-	<button onclick="playSong()">Play Song</button>
+Hope the brook got some cook.
+My look don't like no dirty outlook.
+Run up to the hook and get the crook.
+
+In an Oslo state of mind.
+What more could you ask for? The sharp book?
+You complain about lateness.
+I gotta love it though - somebody still speaks for the outlook.
+
+I'm rappin' to the banana,
+And I'm gonna move your americana.
+
+Sharp, crazy, wet, like a pixie
+Boy, I tell you, I thought you were a nixie.
+
+I can't take the lateness, can't take the fairy.
+I woulda tried to eat I guess I got no contemporary.
+
+I'm rappin' to the americana,
+And I'm gonna move your banana.
+
+Yea, yaz, in an Oslo state of mind.
+
+When I was young my girlfriend had a stationery.
+I waz kicked out without no cherry.
+I never thought I'd see that dictionary.
+Ain't a soul alive that could take my girlfriend's corollary.
+
+A crazy angel is quite the archangel.
+
+Thinking of darkness. Yaz, thinking of darkness (darkness).
+		</textarea>
+
+		<button id="prepareRap" onclick="prepareRap()">Prepare Rap</button>
+		<div id="preparedText">
+			<p id="preparedTextContent"><br>Preprocessed text will be displayed.<br><br></p>
+		</div>
+		
+		<button id="generateRhymes" onclick="generateRhymes()">Generate Rhymes</button> 
+		<div id="rhymeGenerated">
+			<p id="rhymeGeneratedContent"><br>Generated rap will be displayed.<br><br></p>
+		</div>
 
 
+		<button id="createRap" onclick="createRap()">Create Rap</button>
+		<div id="rapProgress">
+	  		<div id="rapProgressBar"></div>
+		</div>
 
-
+		<div style='height: 40px;'>
+		</div>
+		<button id="playSong" onclick="playSong()">Play Song</button> 
+		<div style='height: 100px;'>
+		</div>
+			
 	</div>	
-
-
-
-
-	<script>
-
-
-// without jQuery (doesn't work in older IEs)
-
-		var ctx = new AudioContext();
-		var singer;
-		var speechData;
-		
-
-		// var numChannels = 2;
-		// var sampleRate = ctx.sampleRate;
-
-		// var duration = 10;
-		// var durationSamples = Math.floor((duration/1000) * sampleRate);
-		// var totalSampleSize = 441000; // duration to handle.
-		// var audioBuffer = ctx.createBuffer(numChannels, totalSampleSize, sampleRate);
-		// var audioData = new Float32Array();
-
-		var rhythmStructure = [];
-
-		function createSong(){ 
-			meSpeak.loadConfig("./lib/mespeak_config.json", function() {
-				console.log("config done");
-				meSpeak.loadVoice("./lib/voices/en/en.json", function() {
-					console.log("mespeak voice loaded");
-					
-
-					var lyrics = document.getElementById("lyrics-text").value;
-
-					
-					
-					// in case of trying phenomes
-					phonemes = RiTa.getPhonemes(text);
-
-					sentences = RiTa.splitSentences(lyrics);
-
-
-
-					speechData = meSpeak.speak(text, {
-					  pitch: 200,
-					  rawdata: "ArrayBuffer",
-					  wordgap: 50,
-					  speed: 160,
-					});
-				console.log("loaded " + speechData);
-				});
-			});
-		}
-
-		midiToHz = function(midi) {
-			return (440 / 32) * (Math.pow(2,((midi - 9) / 12)));
-		};
-
-		function playSong(){
-
-			var ab = ctx.createBufferSource();
-			console.log(ab);
-			
-			if (meSpeak.isConfigLoaded()){
-				console.log(speechData);
-				ctx.decodeAudioData(speechData, function(decodedData) {
-
-					// add decoded data to buffer and connect to audiocontext
-					ab.buffer = decodedData;
-					ab.connect(ctx.destination);
-					ab.start();
-					console.log('connected');
-
-					/* Using a Vocoder (disabled) */ 
-					
-					// var buf = ab.buffer;
-					// var freq = 10; // default
-					// voice = vocoder(ctx, buf, buf, freq);
-
-					// midinote = 72
-					// var midiNoteAdj = midinote - 24;
-					// var freq = midiToHz(midiNoteAdj);
-
-					// voice.oscillatorNode.frequency.value = freq;
-					
-					// var voiceBufferData = buf.getChannelData(0); //.slice(0, durationSamples);
-					// var currentVoiceData = Array.prototype.map.call(new Float32Array(durationSamples), function(n, i) {
-					// 	// console.log("map: " + n + ", " + i);
-					// 	if (i < voiceBufferData.length) {
-					// 		return voiceBufferData[i];
-					// 	}
-					// 	else {
-					// 		return 0;
-					// 	}
-					// });
-
-				});
-
-			}
-
-
-
-
-
-		// meSpeak.loadConfig("./lib/mespeak_config.json");
-		// meSpeak.loadVoice("./lib/voices/en/en-us.json");
-
-
-
-		// meSpeak.speak('hello world');
-
-
-
-		// speech data
-		// var speechData = meSpeak.speak(cleanText, {
-		//     pitch: pitch,
-		//     rawdata: "ArrayBuffer",
-		//     wordgap: this.params.wordgap,
-		//     speed: this.params.speed,
-		// });
-
-
-		
-
-
-		var synth = new Tone.AMSynth().toMaster();
-		// synth.triggerAttackRelease("C4", "4n");
-
-		var noiseSynth = new Tone.NoiseSynth().toMaster();
-
-		var seq1 = new Tone.Sequence(function(time, note){
-			// console.log(note);
-			noiseSynth.triggerAttackRelease(time);
-			// synth.triggerAttackRelease(note, "16n");
-		//subdivisions are given as subarrays
-		}, ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]], '4n');
-
-
-		var seq2 = new Tone.Sequence(function(time, note){
-			// console.log(note);
-			// noiseSynth.triggerAttackRelease(time);
-			synth.triggerAttackRelease(note, "16n");
 	
-		}, ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]], '4n');
+	<script src="./js/index.js"></script>
 
-		// //use an array of objects as long as the object has a "time" attribute
-		// var part = new Tone.Part(function(time, value){
-		// 	//the value is an object which contains both the note and the velocity
-		// 	synth.triggerAttackRelease(value.note, "8n", time, value.velocity);
-		// }, [{"time" : 0, "note" : "C3", "velocity": 0.9}, 
-		// 	   {"time" : "0:2", "note" : "C4", "velocity": 0.5}
-		// ]).start(0);
-
-
-
-
-
-		//	PIANO
-		var piano = new Tone.PolySynth(4, Tone.Synth, {
-			"volume" : -4,
-			"oscillator" : {
-				"partials" : [1, 2, 8],
-			},
-			"portamento" : 0.005
-		}).toMaster()
-
-
-
-		function makeChordArray2(root, chordFormula, timeInterval) {
-			var indexMIDI
-			var aChord = [];
-			var timeAndChord = [];
-			// var toneTime = 0;
-			var toneTime = Tone.Time("32n")
-			var chordArray = [];
-			for(let i=0; i<chordFormula.length; i++) {
-				for(let j=0; j<chordFormula[i].length; j++) {
-					// add the root to each chord tone
-					indexMIDI = chordFormula[i][j] + Number(root);
-					
-					// tranlate to a pitch/octave name
-					aChord.push(MIDI_NUM_NAMES[indexMIDI]);
-				}
-				
-				// create add time and chord together
-				timeAndChord.push(toneTime.toNotation());
-				timeAndChord.push(aChord);
-				chordArray.push(timeAndChord);
-				// now calc the time value for next time
-				toneTime = toneTime.add(timeInterval);
-				// clear the arrays;
-				aChord = [];
-				timeAndChord = [];
-			}
-			return chordArray;
-		}
-
-
-		function makeChordArray(root, chordFormula, timeInterval) {
-			var indexMIDI
-			var aChord = [];
-			// var timeAndChord = [];
-			// var toneTime = 0;
-			var toneTime = Tone.Time("32n")
-			var chordArray = [];
-			for(let i=0; i<chordFormula.length; i++) {
-				
-				// add the root to each chord tone
-				indexMIDI = chordFormula[i] + Number(root);
-				
-				// tranlate to a pitch/octave name
-				aChord.push(MIDI_NUM_NAMES[indexMIDI]);
-				
-			}
-			return aChord;
-		}
-
-
-
-		var familyOfTriads = [[0,4,7,11],[0,3,7,10],[0,4,7,10], [0,4,7,10]]; // M7, m7, 7
-
-		var MIDI_NUM_NAMES = ["C_1", "C#_1", "D_1", "D#_1", "E_1", "F_1", "F#_1", "G_1", "G#_1", "A_1", "A#_1", "B_1",
-				"C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
-				"C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
-				"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
-				"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
-				"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
-				"C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
-				"C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
-				"C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
-				"C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
-				"C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"];
-
-		var MIDI_SHARP_NAMES = ['B#_0',  'C#_1', 'Cx_1', 'D#_1',   'E_1',  'E#_1',  'F#_1', 'Fx_1',  'G#_1', 'Gx_1', 'A#_1', 'B_1',
-					'B#_1', 'C#0', 'Cx0', 'D#0', 'E0', 'E#0', 'F#0', 'Fx0', 'G#0', 'Gx0', 'A#0', 'B0',
-					'B#0', 'C#1', 'Cx1', 'D#1', 'E1', 'E#1', 'F#1', 'Fx1', 'G#1', 'Gx1', 'A#1', 'B1',
-					'B#1', 'C#2', 'Cx2', 'D#2', 'E2', 'E#2', 'F#2', 'Fx2', 'G#2', 'Gx2', 'A#2', 'B2',
-					'B#2', 'C#3', 'Cx3', 'D#3', 'E3', 'E#3', 'F#3', 'Fx3', 'G#3', 'Gx3', 'A#3', 'B3',
-					'B#3', 'C#4', 'Cx4', 'D#4', 'E4', 'E#4', 'F#4', 'Fx4', 'G#4', 'Gx4', 'A#4', 'B4',
-					'B#4', 'C#5', 'Cx5', 'D#5', 'E5', 'E#5', 'F#5', 'Fx5', 'G#5', 'Gx5', 'A#5', 'B5',
-					'B#5', 'C#6', 'Cx6', 'D#6', 'E6', 'E#6', 'F#6', 'Fx6', 'G#6', 'Gx6', 'A#6', 'B6',
-					'B#6', 'C#7', 'Cx7', 'D#7', 'E7', 'E#7', 'F#7', 'Fx7', 'G#7', 'Gx7', 'A#7', 'B7',
-					'B#7', 'C#8', 'Cx8', 'D#8', 'E8', 'E#8', 'F#8', 'Fx8', 'G#8', 'Gx8', 'A#8', 'B8',
-					'B#8', 'C#9', 'Cx9', 'D#9', 'E9', 'E#9', 'F#9', 'Fx9'];
-						  
-
-		var MIDI_FLAT_NAMES = ['C_1', 'Db_1', 'D_1', 'Eb_1', 'Fb_1', 'F_1', 'Gb_1', 'G_1', 'Ab_1', 'A_1', 'Bb_1', 'Cb0',
-					'C0', 'Db0', 'D0', 'Eb0', 'Fb0', 'F0', 'Gb0', 'G0', 'Ab0', 'A0', 'Bb0', 'Cb1',
-					'C1', 'Db1', 'D1', 'Eb1', 'Fb1', 'F1', 'Gb1', 'G1', 'Ab1', 'A1', 'Bb1', 'Cb2',
-					'C2', 'Db2', 'D2', 'Eb2', 'Fb2', 'F2', 'Gb2', 'G2', 'Ab2', 'A2', 'Bb2', 'Cb3',
-					'C3', 'Db3', 'D3', 'Eb3', 'Fb3', 'F3', 'Gb3', 'G3', 'Ab3', 'A3', 'Bb3', 'Cb4',
-					'C4', 'Db4', 'D4', 'Eb4', 'Fb4', 'F4', 'Gb4', 'G4', 'Ab4', 'A4', 'Bb4', 'Cb5',
-					'C5', 'Db5', 'D5', 'Eb5', 'Fb5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'Cb6',
-					'C6', 'Db6', 'D6', 'Eb6', 'Fb6', 'F6', 'Gb6', 'G6', 'Ab6', 'A6', 'Bb6', 'Cb7',
-					'C7', 'Db7', 'D7', 'Eb7', 'Fb7', 'F7', 'Gb7', 'G7', 'Ab7', 'A7', 'Bb7', 'Cb8',
-					'C8', 'Db8', 'D8', 'Eb8', 'Fb8', 'F8', 'Gb8', 'G8', 'Ab8', 'A8', 'Bb8', 'Cb9',
-					'C9', 'Db9', 'D9', 'Eb9', 'Fb9', 'F9', 'Gb9', 'G9'];
-
-		var NATURAL_MINOR_SCALE = [0,2,3,5,7,8,10,12];
-		var HARMONIC_MINOR_SCALE = [0,2,3,5,7,8,11,12];
-		var MELODIC_MINOR_SCALE = [0,2,3,5,7,9,11,12];
-
-
-		function playFamilyOfTriads() {
-			// var rootMenu = document.getElementById("root");
-			// var root = rootMenu.options[rootMenu.selectedIndex].value;
-			var root = 60;
-			// this line is hardwired to the familyOfTriads global array, 
-			// that will need to change to make this a more useful function
-			var toneTime = Tone.Time("32n")
-
-			// chordProgression = makeChordArray2(root, familyOfTriads, '2n');
-
-			var chord1 = makeChordArray(60, familyOfTriads[0], "32n");
-			var chord2 = makeChordArray(57, familyOfTriads[1], "2n + 32n");
-			var chord3 = makeChordArray(62, familyOfTriads[1], "1m + 32n");
-			var chord4 = makeChordArray(55, familyOfTriads[2], "1m + 2n + 32n");
-
-
-			chordProgression = [["32n", chord1],
-				["2n + 32n", chord2],
-				["1m + 32n", chord3],
-				["1m + 2n + 32n", chord4]];
-
-			console.log(chordProgression)
-
-
-			var chordPart = new Tone.Part(function(time, chord){
-				piano.triggerAttackRelease(chord, "8n", time);
-			}, chordProgression ).start(0);
-
-			chordPart.loop = true;
-			chordPart.loopStart = "0:0";
-			chordPart.loopEnd = "2:0";
-
-			// var tempo = document.myForm.tempo.value;
-			// Tone.Transport.bpm.value = tempo;   
-			// Tone.Transport.start("+0.1");
-		}
-
-		Tone.Transport.bpm.value = 120;	
-		Tone.Transport.start("+0.1");
-
-		playFamilyOfTriads();
-
-		// seq1.start();
-		// seq2.start();
-
-		// //setup a polyphonic sampler
-		// var keys = new Tone.Players({
-		// 	"A" : "./audio/casio/A1.[mp3|ogg]",
-		// 	"C#" : "./audio/casio/Cs2.[mp3|ogg]",
-		// 	"E" : "./audio/casio/E2.[mp3|ogg]",
-		// 	"F#" : "./audio/casio/Fs2.[mp3|ogg]",
-		// }, {
-		// 	"volume" : -10,
-		// 	"fadeOut" : "64n",
-		// }).toMaster();
-
-		// //the notes
-		// var noteNames = ["F#", "E", "C#", "A"];
-
-		// var loop = new Tone.Sequence(function(time, col){
-		// 	var column = matrix1.matrix[col];
-		// 	for (var i = 0; i < 4; i++){
-		// 		if (column[i] === 1){
-		// 			//slightly randomized velocities
-		// 			var vel = Math.random() * 0.5 + 0.5;
-		// 			keys.get(noteNames[i]).start(time, 0, "16n", 0, vel);
-		// 		}
-		// 	}
-		// }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "16n");
-
-		// Tone.Transport.start();
-
-		// // GUI //
-		// nx.onload = function(){
-		// 	nx.colorize("#f5871f");
-
-		// 	matrix1.col = 16;
-		// 	matrix1.init();
-		// 	for (var i = 0 ; i < 16; i += 2){
-		// 		matrix1.matrix[i][0] = 1
-		// 	}
-			
-
-		// 	matrix1.resize($("#Content").width(), 250);
-		// 	matrix1.draw();
-		// }
-
-		// Interface.Button({
-		// 	text : "Start",
-		// 	activeText : "Stop",
-		// 	type : "toggle",
-		// 	key : 32, //spacebar
-		// 	start : function(){
-		// 		loop.start();
-		// 	},
-		// 	end : function(){
-		// 		loop.stop();
-		// 	},
-		// });
-
-		// Interface.Slider({
-		// 	name : "BPM",
-		// 	min : 80,
-		// 	max : 200,
-		// 	value : Tone.Transport.bpm.value,
-		// 	drag : function(val){
-		// 		Tone.Transport.bpm.value = val;
-		// 	}
-		// });
-
-		// Interface.Loader();
-
-		// $(window).on("resize", function(){
-		// 	matrix1.resize($("#Content").width(), 250);
-		// 	matrix1.draw();	
-		// });
-
-
-
-
-
-
-
-
-
-
-
-
-//   _loadDictionary() {
-//     return {
-//       keys: 'C C# D D# E F F# G G# A A# B'.split(' '),
-//       scales: {
-//         ion: {
-//           name: 'Ionian',
-//           steps: this._genSteps('W W H W W W H'),
-//           dominance: [3,0,1,0,2,0,1],
-//           triads: this._genTriads(0)
-//         },
-//         dor: {
-//           name: 'Dorian',
-//           steps: this._genSteps('W H W W W H W'),
-//           dominance: [3,0,1,0,2,2,1],
-//           triads: this._genTriads(1)
-//         },
-//         phr: {
-//           name: 'Phrygian',
-//           steps: this._genSteps('H W W W H W W'),
-//           dominance: [3,2,1,0,2,0,1],
-//           triads: this._genTriads(2)
-//         },
-//         lyd: {
-//           name: 'Lydian',
-//           steps: this._genSteps('W W W H W W H'),
-//           dominance: [3,0,1,2,2,0,1],
-//           triads: this._genTriads(3)
-//         },
-//         mix: {
-//           name: 'Mixolydian',
-//           steps: this._genSteps('W W H W W H W'),
-//           dominance: [3,0,1,0,2,0,2],
-//           triads: this._genTriads(4)
-//         },
-//         aeo: {
-//           name: 'Aeolian',
-//           steps: this._genSteps('W H W W H W W'),
-//           dominance: [3,0,1,0,2,0,1],
-//           triads: this._genTriads(5)
-//         },
-//         loc: {
-//           name: 'Locrian',
-//           steps: this._genSteps('H W W H W W W'),
-//           dominance: [3,0,1,0,3,0,0],
-//           triads: this._genTriads(6)
-//         },
-//         mel: {
-//           name: 'Melodic Minor',
-//           steps: this._genSteps('W H W W W W H'),
-//           dominance: [3,0,1,0,3,0,0],
-//           triads: 'min min aug maj maj dim dim'.split(' ')
-//         },
-//         har: {
-//           name: 'Harmonic Minor',
-//           steps: this._genSteps('W H W W H WH H'),
-//           dominance: [3,0,1,0,3,0,0],
-//           triads: 'min dim aug min maj maj dim'.split(' ')
-//         }
-//       },
-//       modes: [
-//         'ionian', 'dorian', 'phrygian', 
-//         'lydian', 'mixolydian', 'aeolian',
-//         'locrian', 'major', 'minor', 
-//         'melodic', 'harmonic'
-//       ],
-//       flat_sharp: {
-//         Cb: 'B',
-//         Db: 'C#',
-//         Eb: 'D#',
-//         Fb: 'E',
-//         Gb: 'F#',
-//         Ab: 'G#',
-//         Bb: 'A#'
-//       },
-//       triads: {
-//         maj: [0,4,7],
-//         min: [0,3,7],
-//         dim: [0,3,6],
-//         aug: [0,4,8]
-//       }
-//     };
-//   };
-
-
-
-// {
-// "11": "1 5 7b 9 11",
-// "11b9": "1 5 7b 9b 11",
-// "13": "1 3 5 7b 9 13",
-// "13#11": "1 3 5 7b 9 11# 13",
-// "13#9": "1 3 5 7b 9# 13",
-// "13#9#11": "1 3 5 7b 9# 11# 13",
-// "13b5": "1 3 5d 6 7b 9",
-// "13b9": "1 3 5 7b 9b 13",
-// "13b9#11": "1 3 5 7b 9b 11# 13",
-// "13no5": "1 3 7b 9 13",
-// "13sus4": "1 4 5 7b 9 13",
-// "4": "1 4 7b 10m",
-// "5": "1 5",
-// "69#11": "1 3 5 6 9 11#",
-// "7": "1 3 5 7b",
-// "7#11": "1 3 5 7b 11#",
-// "7#11b13": "1 3 5 7b 11# 13b",
-// "7#5": "1 3 5A 7b",
-// "7#5#9": "1 3 5A 7b 9#",
-// "7#5b9": "1 3 5A 7b 9b",
-// "7#5b9#11": "1 3 5A 7b 9b 11#",
-// "7#5sus4": "1 4 5A 7b",
-// "7#9": "1 3 5 7b 9#",
-// "7#9#11": "1 3 5 7b 9# 11#",
-// "7#9#11b13": "1 3 5 7b 9# 11# 13b",
-// "7#9b13": "1 3 5 7b 9# 13b",
-// "7add6": "1 3 5 7b 13",
-// "7b13": "1 3 7b 13b",
-// "7b5": "1 3 5d 7b",
-// "7b6": "1 3 5 6b 7b",
-// "7b9": "1 3 5 7b 9b",
-// "7b9#11": "1 3 5 7b 9b 11#",
-// "7b9#9": "1 3 5 7b 9b 9#",
-// "7b9b13": "1 3 5 7b 9b 13b",
-// "7b9b13#11": "1 3 5 7b 9b 11# 13b",
-// "7no5": "1 3 7b",
-// "7sus4": "1 4 5 7b",
-// "7sus4b9": "1 4 5 7b 9b",
-// "7sus4b9b13": "1 4 5 7b 9b 13b",
-// "9": "1 3 5 7b 9",
-// "9#11": "1 3 5 7b 9 11#",
-// "9#11b13": "1 3 5 7b 9 11# 13b",
-// "9#5": "1 3 5A 7b 9",
-// "9#5#11": "1 3 5A 7b 9 11#",
-// "9b13": "1 3 7b 9 13b",
-// "9b5": "1 3 5d 7b 9",
-// "9no5": "1 3 7b 9",
-// "9sus4": "1 4 5 7b 9",
-// "Blues": "1 3b 4 5d 5 7b",
-// "M": "1 3 5",
-// "M#5": "1 3 5A",
-// "M#5add9": "1 3 5A 9",
-// "M13": "1 3 5 7 9 13",
-// "M13#11": "1 3 5 7 9 11# 13",
-// "M6": "1 3 5 13",
-// "M6#11": "1 3 5 6 11#",
-// "M69": "1 3 5 6 9",
-// "M69#11": "1 3 5 6 9 11#",
-// "M7#11": "1 3 5 7 11#",
-// "M7#5": "1 3 5A 7",
-// "M7#5sus4": "1 4 5A 7",
-// "M7#9#11": "1 3 5 7 9# 11#",
-// "M7add13": "1 3 5 6 7 9",
-// "M7b5": "1 3 5d 7",
-// "M7b6": "1 3 6b 7",
-// "M7b9": "1 3 5 7 9b",
-// "M7sus4": "1 4 5 7",
-// "M9": "1 3 5 7 9",
-// "M9#11": "1 3 5 7 9 11#",
-// "M9#5": "1 3 5A 7 9",
-// "M9#5sus4": "1 4 5A 7 9",
-// "M9b5": "1 3 5d 7 9",
-// "M9sus4": "1 4 5 7 9",
-// "Madd9": "1 3 5 9",
-// "Maj7": "1 3 5 7",
-// "Mb5": "1 3 5d",
-// "Mb6": "1 3 13b",
-// "Msus2": "1 2M 5",
-// "Msus4": "1 4 5",
-// "addb9": "1 3 5 9b",
-// "m": "1 3b 5",
-// "m#5": "1 3b 5A",
-// "m11": "1 3b 5 7b 9 11",
-// "m11#5": "1 3b 6b 7b 9 11",
-// "m11b5": "1 3b 7b 12d 2M 4",
-// "m13": "1 3b 5 7b 9 11 13",
-// "m6": "1 3b 4 5 13",
-// "m69": "1 3b 5 6 9",
-// "m7": "1 3b 5 7b",
-// "m7#5": "1 3b 6b 7b",
-// "m7add11": "1 3b 5 7b 11",
-// "m7b5": "1 3b 5d 7b",
-// "m9": "1 3b 5 7b 9",
-// "m9#5": "1 3b 6b 7b 9",
-// "m9b5": "1 3b 7b 12d 2M",
-// "mM7": "1 3b 5 7",
-// "mM7b6": "1 3b 5 6b 7",
-// "mM9": "1 3b 5 7 9",
-// "mM9b6": "1 3b 5 6b 7 9",
-// "madd4": "1 3b 4 5",
-// "madd9": "1 3b 5 9",
-// "mb6M7": "1 3b 6b 7",
-// "mb6b9": "1 3b 6b 9b",
-// "o": "1 3b 5d",
-// "o7": "1 3b 5d 13",
-// "o7M7": "1 3b 5d 6 7",
-// "oM7": "1 3b 5d 7",
-// "sus24": "1 2M 4 5",
-// "+add#9": "1 3 5A 9#"
-// }
-
-
-
-
-}
-
-
-
-
-	</script>
 </body>
 </html>
 
