@@ -85,7 +85,7 @@ button:disabled {
 #prepareProgressBar {
     width: 0%;
     height: 30px;
-    background-color: green;
+    background-color: RoyalBlue;
 }
 
 #rapProgress {
@@ -95,7 +95,7 @@ button:disabled {
 #rapProgressBar {
     width: 0%;
     height: 30px;
-    background-color: green;
+    background-color: RoyalBlue;
 }
 
 #rhymeProgress {
@@ -105,7 +105,7 @@ button:disabled {
 #rhymeProgressBar {
     width: 0%;
     height: 30px;
-    background-color: green;
+    background-color: RoyalBlue;
 }
 
 #preparedText, #rhymeGenerated, #preparedTextContent, #rhymeGeneratedContent {
