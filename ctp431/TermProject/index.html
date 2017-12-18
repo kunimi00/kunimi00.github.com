@@ -26,16 +26,24 @@
 <body>
 
 	<div id="Content" style="margin: auto;">
-		<div id="Title"><b>Lyrics2Rap</b> &nbsp Term Project for CTP431 Fall2017, by Jung Choi <i>20174466 GSCT KAIST</i></div>
+		<div id="Title"><b>Lyrics2Rap</b> <font style='font-size:13px'> by Jung Choi, term project for CTP431 fall 2017.</font></div>
 
 		<div id="Explanation">
-			<i>Instructions</i> <br>
-			1) Put your own lyrics down. <br>
-			&nbsp <i>If you want to generate some sample rap lyrics, please try the following url</i> :
-			<a href="https://www.song-lyrics-generator.org.uk/?i=m90xvmc">https://www.song-lyrics-generator.org.uk/?i=m90xvmc</a><br>
+			Instructions<br>
+			1) Write down <b>your own lyrics</b>. <br>
+			<font face="Nanum Gothic" style="font-size:11px">
+			&nbsp If you want to generate some sample rap lyrics, please try the following url : 
+			<a href="https://www.song-lyrics-generator.org.uk/?i=m90xvmc">https://www.song-lyrics-generator.org.uk/?i=m90xvmc</a>
+			</font>
+			<br>
 			2) Automatically generate extra sentences with <b>corresponding rhyme for each word.</b> <br>
 			3) Generate audio for rappping. <br>
-			4) <b>Play the song!</b> <i>(sometimes it takes a couple of seconds before start playing.) <br>
+			4) Set up timings for vocal words onto a beat track. <br>
+			5) <b>Play the song!</b> <br>
+			<font face="Nanum Gothic" style="font-size:11px">
+			&nbsp (*sometimes it takes a couple of seconds before start playing.) 
+			</font>
+			<br>
 		</div>
 
 		<textarea rows="4" cols="50" name="lyrics-text" id="lyrics-text">
@@ -83,12 +91,12 @@ Thinking of darkness. Yaz, thinking of darkness (darkness).
 
 		<button id="prepareRap" onclick="prepareRap()">(1) Preprocess the Lyrics</button>
 		<div id="preparedText">
-			<p id="preparedTextContent"><br>Preprocessed text will be displayed.<br><br></p>
+			<p id="preparedTextContent"><br>&nbspPreprocessed text will be displayed.<br><br></p>
 		</div>
 		
 		<button id="generateRhymes" onclick="generateRhymes()">(2) Write Down Extra Sentences with Similar Rhymes</button> 
 		<div id="rhymeGenerated">
-			<p id="rhymeGeneratedContent"><br>Generated extra lyrics will be displayed along with the original ones.<br><br></p>
+			<p id="rhymeGeneratedContent"><br>&nbspGenerated extra lyrics will be displayed along with the original ones.<br><br></p>
 		</div>
 
 

@@ -1,18 +1,28 @@
+@import url('//fonts.googleapis.com/earlyaccess/nanumgothic.css');
 
 canvas {
 	margin-top: 10px;
 }
+
+
+
+
 textarea {
     width: 100%;
     height: 300px;
-    padding: 12px 20px;
+    padding: 12px 12px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
-    background-color: #f8f8f8;
+    background-color: #3f3f3f;
     box-shadow: 0 2px 3px rgba(0,0,0,0.1) inset;
     resize: none;
+    color: white;
+    -webkit-font-smoothing: antialiased;
     font-size: 1.2em;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    
 }
 
 button {
@@ -25,10 +35,12 @@ button {
 	/*border-bottom: 1px solid #498b50;*/	
 	color: white;
 	-webkit-font-smoothing: antialiased;
-	font-weight: bold;
+	/*font-weight: bold;*/
 	margin: 3px;
 	width: 100%;
 	text-align: center;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 500;
 }
 
 button:hover, button:focus {
@@ -47,15 +59,13 @@ button:disabled {
 
 #Content {
 	width: 800px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size:10pt;
 	float:center;
 }
 
 #Title {
 	/*font-size: 1.0em;*/
-	font-family: Arial, Helvetica, sans-serif;
-	font-size:10pt;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
 	font-style: bold;
 	margin: auto;
     
@@ -66,14 +76,13 @@ button:disabled {
 }
 
 #Explanation {
-	/*font-size: 1.0em;*/
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: "Nanum Gothic";
 	font-size:10pt;
-
-    padding: 10px;
+    padding: 12px 12px;
 	width:100%;
 	word-wrap: break-word;
 	margin:auto;
+	line-height: 24px;
 }
 
 
@@ -110,18 +119,19 @@ button:disabled {
 
 #preparedText, #rhymeGenerated, #preparedTextContent, #rhymeGeneratedContent {
 	/*font-size: 1.0em;*/
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
 	font-size:12pt;
 	float:left;
-	/*position:absolute;*/
-	/*background-color:#D4D3D0;*/
-	/*height:50px;*/
 	width:100%;
 	word-wrap: break-word;
 	margin:auto;
+	padding: 0.5em ;
 }
 
 .blink_text {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
 
     animation:1s blinker linear infinite;
 	    -webkit-animation:1s blinker linear infinite;
