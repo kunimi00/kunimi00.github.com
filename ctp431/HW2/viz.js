@@ -107,7 +107,7 @@ function draw() {
 	text("melomance", windowWidth - 50, windowHeight - 80);
 	textSize(14);
 	textStyle(NORMAL);
-  	text("jung choi, fall 2017", windowWidth - 50, windowHeight - 60);
+  	text("jeong choi, fall 2017", windowWidth - 50, windowHeight - 60);
   	text("song visulization", windowWidth - 50, windowHeight - 43);
 	pop();
 
